@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Покраска автомобилей в Воронеже</title>
+<meta name="description" content="Покраска кузова и отдельных элементов, сварка порогов и арок, полировка. Свой гараж в Воронеже, ул. Кривошеина 7А. Бесплатная консультация, материалы клиента или свои.">
+<link rel="icon" href="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/ico.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14151b;
+    --bg-panel:#1c1e26;
+    --bg-elev:#20222b;
+    --bg-elev-2:#262832;
+    --ink:#f1efe8;
+    --grey:#a6a9b4;
+    --grey-dim:#75798a;
+    --accent:#c6a44d;
+    --accent-2:#ddc077;
+    --accent-dim:#8c7431;
+    --line:rgba(255,255,255,0.09);
+    --line-strong:rgba(255,255,255,0.18);
+    --radius-s:4px;
+    --radius-m:10px;
+    --maxw:1180px;
+    --pad:clamp(16px, 5vw, 20px);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%; overflow-x:hidden;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block; max-width:100%;}
+  a{color:inherit; text-decoration:none;}
+  ul{list-style:none;}
+  button{font:inherit; color:inherit; background:none; border:none; cursor:pointer;}
+
+  h1,h2,h3,.disp{
+    font-family:'Unbounded',sans-serif;
+    font-weight:700;
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 var(--pad);
+  }
+
+  section{padding:56px 0;}
+  .section-head{margin-bottom:32px; max-width:640px;}
+  .section-head h2{font-size:clamp(26px,7vw,42px); margin-bottom:12px;}
+  .section-head p{color:var(--grey); font-size:15.5px; max-width:52ch;}
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; color:var(--accent); font-weight:700;
+    margin-bottom:14px;
+  }
+  .kicker::before{
+    content:''; width:16px; height:2px; background:var(--accent); display:block;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    gap:8px;
+    min-height:52px;
+    padding:0 26px;
+    border-radius:var(--radius-s);
+    font-family:'Manrope',sans-serif;
+    font-weight:700;
+    font-size:15.5px;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease, color .15s ease;
+    white-space:nowrap;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{
+    background:var(--accent);
+    color:#191a14;
+  }
+  .btn-primary:hover{background:var(--accent-2);}
+  .btn-ghost{
+    border:1.5px solid var(--line-strong);
+    color:var(--ink);
+    background:var(--bg-elev);
+  }
+  .btn-ghost:hover{border-color:var(--accent); color:var(--accent);}
+  .btn-block{width:100%;}
+  .btn-avito{
+    margin-top:10px;
+    border:1.5px solid rgba(20,201,112,0.35);
+    color:#3ddb8c;
+    background:rgba(20,201,112,0.1);
+  }
+  .btn-avito svg{flex:none;}
+  .btn-avito:hover{border-color:#3ddb8c; background:rgba(20,201,112,0.18);}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(20,21,27,0.86);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    transition:border-color .25s ease, background .25s ease;
+  }
+  header.is-scrolled{border-bottom-color:var(--line);}
+  .nav{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    padding:12px 0 0;
+  }
+  .logo{
+    font-family:'Unbounded',sans-serif;
+    font-weight:800;
+    font-size:19px;
+    display:flex; flex-direction:column; line-height:1.1;
+    color:var(--ink);
+    padding:0 0 10px;
+  }
+  .logo span{
+    font-family:'Manrope',sans-serif;
+    font-weight:600;
+    font-size:10.5px;
+    color:var(--grey);
+    letter-spacing:.03em;
+  }
+  .nav-links-scroll{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:12px;
+  }
+  .nav-links-scroll::-webkit-scrollbar{display:none;}
+  .nav-links{
+    display:flex;
+    gap:22px;
+    width:max-content;
+    font-size:14px;
+    font-weight:600;
+    color:var(--grey);
+    white-space:nowrap;
+  }
+  .nav-links a{flex:none;}
+  .nav-links a:hover{color:var(--ink);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:32px 0 44px;
+    overflow:hidden;
+  }
+  .hero-art{
+    display:none;
+    position:absolute;
+    top:-40px; right:-120px;
+    width:520px;
+    opacity:0.9;
+    pointer-events:none;
+  }
+  .hero-art svg{width:100%; height:auto;}
+  .hero-grain{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 60% 45% at 85% 8%, rgba(198,164,77,0.14), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 0% 100%, rgba(198,164,77,0.07), transparent 70%);
+    pointer-events:none;
+  }
+  .hero-content{position:relative; z-index:2; max-width:640px;}
+  .hero h1{
+    font-size:clamp(34px,8.6vw,64px);
+    margin-bottom:20px;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--accent);
+  }
+  .hero-lead{
+    color:var(--grey);
+    font-size:17px;
+    max-width:46ch;
+    margin-bottom:30px;
+  }
+  .hero-actions{
+    display:flex; flex-wrap:wrap; gap:12px;
+    margin-bottom:34px;
+  }
+  .hero-facts{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    border-top:1px solid var(--line);
+    padding-top:22px;
+  }
+  .hero-fact{
+    display:flex; align-items:center; gap:10px;
+    font-size:14.5px; color:var(--grey);
+    font-weight:600;
+  }
+  .hero-fact .dot{
+    width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none;
+  }
+
+  /* ---------- Marquee strip ---------- */
+  .strip{
+    background:var(--bg-panel);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+    padding:14px 0;
+  }
+  .strip-track{
+    display:flex;
+    gap:0;
+    width:max-content;
+    animation:scroll-strip 26s linear infinite;
+  }
+  .strip-item{
+    display:flex; align-items:center; gap:12px;
+    font-family:'Unbounded',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--grey-dim);
+    padding:0 28px;
+    white-space:nowrap;
+  }
+  .strip-item b{color:var(--ink); font-weight:600;}
+  .strip-item .sep{color:var(--accent);}
+  @keyframes scroll-strip{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .strip-track{animation:none;}
+  }
+
+  /* ---------- Services ---------- */
+  .services-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  .svc-card{
+    background:var(--bg-elev);
+    border:1px solid var(--line);
+    border-radius:var(--radius-m);
+    padding:26px 24px;
+  }
+  .svc-card .num{
+    font-family:'Unbounded',sans-serif;
+    font-size:13px;
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:14px;
+    display:block;
+  }
+  .svc-card h3{
+    font-size:21px;
+    margin-bottom:10px;
+  }
+  .svc-card p{color:var(--grey); font-size:15px; margin-bottom:16px;}
+  .svc-tags{display:flex; flex-wrap:wrap; gap:8px;}
+  .svc-tags span{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--grey);
+    border:1px solid var(--line-strong);
+    border-radius:100px;
+    padding:6px 12px;
+  }
+  .svc-card.is-accent{
+    background:linear-gradient(160deg, rgba(198,164,77,0.14) 0%, var(--bg-elev) 60%);
+    border-color:rgba(198,164,77,0.28);
+  }
+  .materials-strip{
+    margin-top:14px;
+    background:var(--bg-elev-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius-m);
+    padding:22px 24px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .materials-strip h3{
+    font-family:'Manrope',sans-serif;
+    font-weight:800;
+    font-size:16.5px;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  .materials-strip p{color:var(--grey); font-size:14.5px;}
+
+  /* ---------- Process ---------- */
+  .process{
+    background:var(--bg-panel);
+  }
+  .steps{
+    display:flex; flex-direction:column;
+    border-top:1px solid var(--line);
+  }
+  .step{
+    display:grid;
+    grid-template-columns:52px 1fr;
+    gap:18px;
+    padding:26px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .step-num{
+    font-family:'Unbounded',sans-serif;
+    font-size:15px;
+    font-weight:700;
+    color:var(--accent);
+    padding-top:2px;
+  }
+  .step h3{font-size:18.5px; margin-bottom:6px; font-family:'Manrope',sans-serif; font-weight:800; color:var(--ink);}
+  .step p{color:var(--grey); font-size:15px; max-width:52ch;}
+
+  /* ---------- Examples / photo gallery ---------- */
+  .examples-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+  .example-card{
+    position:relative;
+    display:block;
+    border-radius:var(--radius-m);
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:var(--bg-elev-2);
+  }
+  .example-card.is-main{
+    grid-column:1 / -1;
+    aspect-ratio:16/9;
+  }
+  .example-card:not(.is-main){
+    aspect-ratio:4/3;
+  }
+  .example-card img{
+    width:100%; height:100%;
+    object-fit:cover;
+    transition:transform .35s ease;
+  }
+  .example-card:active img{transform:scale(1.04);}
+  .example-btn{
+    position:absolute; bottom:10px; right:10px; z-index:2;
+    width:34px; height:34px;
+    border-radius:50%;
+    background:rgba(20,21,27,0.6);
+    backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff;
+  }
+  .example-btn svg{width:16px; height:16px;}
+  .gallery-note{
+    margin-top:16px;
+    font-size:13.5px;
+    color:var(--grey-dim);
+  }
+
+  /* Lightbox — pure CSS via :target, works with no JS on any device */
+  .lightbox{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(10,9,8,0.94);
+    display:none;
+    align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .lightbox:target{display:flex;}
+  .lightbox figure{max-width:920px; width:100%;}
+  .lightbox img{
+    width:100%; max-height:78vh;
+    object-fit:contain;
+    border-radius:var(--radius-m);
+    background:#0c0c0c;
+  }
+  .lightbox figcaption{color:#f2ece2; font-size:14px; margin-top:14px; text-align:center;}
+  .lightbox-close{
+    position:absolute; top:18px; right:18px;
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(255,255,255,0.14);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff;
+  }
+
+  /* ---------- Why ---------- */
+  .why-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:2px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:var(--radius-m);
+    overflow:hidden;
+  }
+  .why-item{
+    background:var(--bg);
+    padding:24px;
+  }
+  .why-item h3{
+    font-family:'Manrope',sans-serif;
+    font-weight:800;
+    font-size:17px;
+    margin-bottom:8px;
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink);
+  }
+  .why-item h3 .ico{
+    width:8px; height:8px; background:var(--accent); flex:none; border-radius:2px;
+  }
+  .why-item p{color:var(--grey); font-size:14.5px;}
+
+  /* ---------- Contact ---------- */
+  .contact{
+    background:var(--bg-panel);
+  }
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  .contact-card{
+    background:var(--bg-elev);
+    border:1px solid var(--line);
+    border-radius:var(--radius-m);
+    padding:28px 24px;
+  }
+  .contact-row{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap:16px;
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .contact-row:last-child{border-bottom:none; padding-bottom:0;}
+  .contact-row:first-child{padding-top:0;}
+  .contact-label{
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--grey-dim);
+    font-weight:700;
+    padding-top:2px;
+  }
+  .contact-value{
+    font-size:16.5px;
+    font-weight:700;
+    text-align:right;
+    color:var(--ink);
+  }
+  .contact-value small{
+    display:block;
+    font-weight:500;
+    font-size:13px;
+    color:var(--grey);
+    margin-top:3px;
+  }
+  .map-links{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin-top:22px;
+  }
+  .map-links .btn{flex:1; min-width:150px;}
+
+  .cta-panel{
+    background:linear-gradient(150deg, #0e0f13 0%, #2a2311 100%);
+    border:1px solid rgba(198,164,77,0.25);
+    border-radius:var(--radius-m);
+    padding:30px 24px;
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .cta-panel h3{font-size:23px; color:#fff;}
+  .cta-panel p{color:rgba(241,239,232,0.72); font-size:15px;}
+  .cta-panel .btn-ghost{background:transparent; border-color:rgba(255,255,255,0.28); color:#fff;}
+  .cta-panel .btn-ghost:hover{border-color:var(--accent-2); color:var(--accent-2);}
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:34px 0 100px;
+    border-top:1px solid var(--line);
+  }
+  .foot-row{
+    display:flex; flex-direction:column; gap:18px;
+    font-size:13.5px; color:var(--grey-dim);
+  }
+  .foot-row a{text-decoration:underline; color:var(--grey-dim);}
+  .foot-logo{
+    font-family:'Unbounded',sans-serif; font-weight:800; font-size:16px; color:var(--ink);
+  }
+
+  /* ---------- Sticky mobile CTA ---------- */
+  .sticky-cta{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    display:flex; gap:10px;
+    padding:10px var(--pad) calc(10px + env(safe-area-inset-bottom));
+    background:rgba(20,21,27,0.92);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);
+  }
+  .sticky-cta .btn{flex:1; min-height:50px;}
+
+  @media (min-width:600px){
+    .examples-grid{
+      display:flex;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      overflow-y:hidden;
+      scroll-snap-type:x proximity;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:10px;
+    }
+    .examples-grid::-webkit-scrollbar{height:8px;}
+    .examples-grid::-webkit-scrollbar-track{background:var(--bg-panel); border-radius:100px;}
+    .examples-grid::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:100px;}
+    .examples-grid::-webkit-scrollbar-thumb:hover{background:var(--accent-dim);}
+    .example-card{
+      flex:0 0 auto;
+      scroll-snap-align:start;
+    }
+    .example-card.is-main{
+      width:min(52vw, 620px);
+      aspect-ratio:4/3;
+    }
+    .example-card:not(.is-main){
+      width:min(30vw, 320px);
+      aspect-ratio:4/3;
+    }
+  }
+
+  @media (min-width:760px){
+    :root{--pad:40px;}
+    section{padding:100px 0;}
+    .nav{flex-direction:row; align-items:center; justify-content:space-between; padding:0; height:66px;}
+    .logo{padding:0;}
+    .nav-links-scroll{width:auto; overflow:visible; padding-bottom:0;}
+    .nav-links{gap:34px; width:auto; font-size:14.5px;}
+    .sticky-cta{display:none;}
+    .hero{padding:70px 0 90px;}
+    .hero-art{display:block; width:380px; top:-30px; right:-90px; opacity:0.5;}
+    .hero-facts{grid-template-columns:1fr 1fr;}
+    .services-grid{grid-template-columns:repeat(2,1fr);}
+    .materials-strip{flex-direction:row; align-items:center; justify-content:space-between;}
+    .materials-strip-text{max-width:60%;}
+    /* Галерея на компьютере: сетка в несколько колонок (мобильная версия не затронута) */
+    .examples-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      overflow:visible;
+      padding-bottom:0;
+      scroll-snap-type:none;
+    }
+    .examples-grid > div{display:contents;} /* лишняя обёртка не мешает сетке */
+    .example-card:not(.is-main){width:auto; aspect-ratio:4/3;}
+    .example-card.is-main{
+      width:auto;
+      aspect-ratio:auto;
+      grid-column:1; /* сбрасываем «на всю ширину» из базовых стилей */
+      grid-row:span 2; /* главное фото — высокая плитка слева на две строки */
+    }
+    .example-card.is-main img{position:absolute; inset:0;}
+    .gallery-note{grid-column:1 / -1;}
+    .why-grid{grid-template-columns:1fr 1fr;}
+    .contact-grid{grid-template-columns:1.1fr 0.9fr; gap:28px;}
+    .step{grid-template-columns:70px 1fr; padding:32px 0;}
+  }
+
+  @media (min-width:1024px){
+    .hero-content{max-width:640px;}
+    .hero-art{width:620px; top:-60px; right:-60px; opacity:0.8;}
+  }
+
+  @media (max-width:380px){
+    .hero h1{font-size:clamp(30px,9vw,36px);}
+    .hero-lead{font-size:16px;}
+    .btn{padding:0 18px; font-size:14.5px;}
+    section{padding:44px 0;}
+    .svc-card, .why-item, .contact-card, .cta-panel{padding:20px 18px;}
+    .examples-grid{gap:8px;}
+  }
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <div class="wrap nav">
+    <a href="#top" class="logo">Покраска авто<span>Качественно·Быстро·Аккуратно</span></a>
+    <nav class="nav-links-scroll">
+      <div class="nav-links">
+        <a href="#services">Услуги</a>
+        <a href="#process">Как работаю</a>
+        <a href="#examples">Примеры</a>
+        <a href="#contact">Контакты</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-grain"></div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 600 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M55 205 C 88 162, 148 133, 195 130 L 258 86 C 296 64, 356 63, 394 82 L 452 130 C 499 134, 528 158, 543 193" stroke="url(#carShine)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+        <path id="car-path" d="M40 230 C 60 150, 130 120, 190 118 L 260 70 C 300 45, 360 44, 400 66 L 460 118 C 520 122, 555 150, 560 200 L 560 230" stroke="url(#carGrad)" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M40 230 L560 230" stroke="url(#carGrad)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M300 108 C 296 148, 296 192, 300 230" stroke="url(#carGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+        <path d="M233 97 C 222 92, 213 97, 214 105 C 215 111, 223 113, 231 109" stroke="url(#carGrad)" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="551" cy="188" rx="7" ry="4" fill="url(#carGrad)"/>
+        <ellipse cx="47" cy="212" rx="6" ry="3.5" fill="url(#carGrad)"/>
+        <line x1="230" y1="95" x2="260" y2="70" stroke="url(#carGrad)" stroke-width="2"/>
+        <line x1="360" y1="95" x2="400" y2="66" stroke="url(#carGrad)" stroke-width="2"/>
+        <g id="wheel">
+          <circle r="35" stroke="#34363f" stroke-width="11" fill="#1b1c22"/>
+          <circle r="35" stroke="url(#carGrad)" stroke-width="1.5" fill="none"/>
+          <circle r="11" fill="#1b1c22" stroke="url(#carGrad)" stroke-width="2"/>
+          <line x1="0" y1="-12" x2="0" y2="-30" stroke="url(#carGrad)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="-11.4" y1="-3.7" x2="-28.5" y2="-9.3" stroke="url(#carGrad)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="-7.1" y1="9.7" x2="-17.6" y2="24.3" stroke="url(#carGrad)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="7.1" y1="9.7" x2="17.6" y2="24.3" stroke="url(#carGrad)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="11.4" y1="-3.7" x2="28.5" y2="-9.3" stroke="url(#carGrad)" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <use href="#wheel" x="150" y="235"/>
+        <use href="#wheel" x="450" y="235"/>
+        <defs>
+          <linearGradient id="carGrad" x1="40" y1="230" x2="560" y2="70" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#8c7431"/>
+            <stop offset="0.5" stop-color="#ddc077"/>
+            <stop offset="1" stop-color="#c6a44d"/>
+          </linearGradient>
+          <linearGradient id="carShine" x1="55" y1="205" x2="543" y2="82" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+            <stop offset="0.5" stop-color="#f3e6c1" stop-opacity="0.9"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="wrap hero-content">
+      <p class="kicker">Гараж в Воронеже, ул. Кривошеина, 7А</p>
+      <h1>Покраска, которую <em>не отличить</em> от заводской</h1>
+      <p class="hero-lead">От небольших сколов и царапин до полной покраски кузова — берёмся за задачи, которые помогают автомобилю выглядеть как новым.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Бесплатная консультация</a>
+        <a href="tel:+79001234567" class="btn btn-ghost">Узнать стоимость</a>
+      </div>
+      <div class="hero-facts">
+        <div class="hero-fact"><span class="dot"></span>Консультация — бесплатно</div>
+        <div class="hero-fact"><span class="dot"></span>Материалы клиента или свои</div>
+        <div class="hero-fact"><span class="dot"></span>Свой гараж, без посредников</div>
+        <div class="hero-fact"><span class="dot"></span>Воронеж, Кривошеина, 7А</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true">
+    <div class="strip-track">
+      <div class="strip-item"><b>Покраска кузова</b><span class="sep">—</span></div>
+      <div class="strip-item">Покраска элементов<span class="sep">—</span></div>
+      <div class="strip-item"><b>Сварка порогов и арок</b><span class="sep">—</span></div>
+      <div class="strip-item">Полировка<span class="sep">—</span></div>
+      <div class="strip-item"><b>Бесплатная консультация</b><span class="sep">—</span></div>
+      <div class="strip-item">Воронеж<span class="sep">—</span></div>
+      <div class="strip-item"><b>Покраска кузова</b><span class="sep">—</span></div>
+      <div class="strip-item">Покраска элементов<span class="sep">—</span></div>
+      <div class="strip-item"><b>Сварка порогов и арок</b><span class="sep">—</span></div>
+      <div class="strip-item">Полировка<span class="sep">—</span></div>
+      <div class="strip-item"><b>Бесплатная консультация</b><span class="sep">—</span></div>
+      <div class="strip-item">Воронеж<span class="sep">—</span></div>
+    </div>
+  </div>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Услуги</p>
+        <h2>Что я делаю</h2>
+        <p>Не только покраска: беру машину в работу от сварки кузовных элементов до финальной полировки.</p>
+      </div>
+      <div class="services-grid">
+        <div class="svc-card is-accent">
+          <span class="num">01</span>
+          <h3>Полная покраска кузова</h3>
+          <p>Полная перекраска авто в заводской или новый цвет. Подготовка, грунт, база, лак — весь цикл в одном гараже.</p>
+          <div class="svc-tags"><span>Полная перекраска</span><span>Смена цвета</span></div>
+        </div>
+        <div class="svc-card">
+          <span class="num">02</span>
+          <h3>Покраска отдельных элементов</h3>
+          <p>Точечный ремонт после сколов, царапин и мелких ДТП. Крашу так, чтобы граница была не видна даже вблизи.</p>
+          <div class="svc-tags"><span>Бампер</span><span>Крыло</span><span>Дверь</span><span>Капот</span></div>
+        </div>
+        <div class="svc-card">
+          <span class="num">03</span>
+          <h3>Сварка порогов и арок</h3>
+          <p>Вырезаю прогнившие участки и вставляю ремонтные вставки или пороги целиком. После сварки — подготовка под покраску.</p>
+          <div class="svc-tags"><span>Пороги</span><span>Арки колёс</span><span>Антикор</span></div>
+        </div>
+        <div class="svc-card">
+          <span class="num">04</span>
+          <h3>Полировка</h3>
+          <p>Убираю паутинку, мелкие царапины и матовость после покраски или долгой эксплуатации. Возвращаю глубину цвета и блеск.</p>
+          <div class="svc-tags"><span>После покраски</span><span>Восстановление блеска</span></div>
+        </div>
+      </div>
+      <div class="materials-strip">
+        <div class="materials-strip-text">
+          <h3>Материалы — на ваш выбор</h3>
+          <p>Работаю с материалами, которые привезёте вы, или использую свои проверенные краски и лаки. Разница — в смете, не в качестве.</p>
+        </div>
+        <div class="svc-tags"><span>Ваши материалы</span><span>Мои материалы</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" class="process">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Процесс</p>
+        <h2>Как проходит работа</h2>
+        <p>Без лишних звонков и хождений по кабинетам — всё решается напрямую с мастером.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div>
+            <h3>Бесплатная консультация</h3>
+            <p>Присылаете фото повреждения или звоните — обсуждаем объём работы, цвет и сроки. Ничего не стоит.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div>
+            <h3>Осмотр и смета</h3>
+            <p>Смотрю авто вживую в гараже на Кривошеина, 7А, называю точную стоимость и дату готовности.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div>
+            <h3>Подготовка и покраска</h3>
+            <p>Зачистка, шпаклёвка при необходимости, грунт, покраска в камере, лак. Своими материалами или вашими.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div>
+            <h3>Приёмка результата</h3>
+            <p>Смотрим машину вместе при дневном свете, при необходимости — дорабатываю на месте.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="examples">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Примеры работ</p>
+        <h2>Что чаще всего привозят в гараж</h2>
+        <p>Нажмите на фото, чтобы увеличить. Больше готовых машин — в профиле на Авито.</p>
+      </div>
+      <div class="examples-grid">
+       <div>
+        <a href="#lb-1" class="example-card is-main" aria-label="Открыть фото крупнее: Полная перекраска кузова">
+          <img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-main.jpg" alt="Полная перекраска кузова — пример работы" loading="lazy" decoding="async" width="1200" height="1500">
+          <span class="example-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a> 
+        <a href="#lb-2" class="example-card" aria-label="Открыть фото крупнее: Бампер и крыло после ДТП">
+          <img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-2.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Покраска элементов кузова — бампер и крыло" loading="lazy" decoding="async" width="900" height="900">
+          <span class="example-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a href="#lb-3" class="example-card" aria-label="Открыть фото крупнее: Ремонт порога и арки">
+          <img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-3.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Сварка порогов и арок — ремонт" loading="lazy" decoding="async" width="900" height="900">
+          <span class="example-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a href="#lb-4" class="example-card" aria-label="Открыть фото крупнее: Восстановление блеска лака">
+          <img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-4.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Полировка кузова — восстановление блеска" loading="lazy" decoding="async" width="900" height="900">
+          <span class="example-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a href="#lb-5" class="example-card" aria-label="Открыть фото крупнее: Подготовка перед покраской">
+          <img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-5.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Подготовка кузова — шпаклёвка и грунт" loading="lazy" decoding="async" width="900" height="900">
+          <span class="example-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a href="#lb-6" class="example-card" aria-label="Открыть фото крупнее: Дверь и капот в цвет по коду">
+          <img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-6.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Покраска двери и капота в цвет по коду" loading="lazy" decoding="async" width="900" height="900">
+          <span class="example-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a href="#lb-7" class="example-card" aria-label="Открыть фото крупнее: Машина после полировки">
+          <img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-7.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Машина после мойки и полировки" loading="lazy" decoding="async" width="900" height="900">
+          <span class="example-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+      </div>
+      <p class="gallery-note">Фото «до / после» по этим и другим машинам — в профиле на Авито или пришлю в переписке.</p>
+    </div>
+
+    <a href="#!" id="lb-1" class="lightbox" aria-label="Закрыть">
+      <span class="lightbox-close" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <figure><img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-main.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Полная перекраска кузова — пример работы"><figcaption>Покраска кузова · Полная перекраска в графит</figcaption></figure>
+    </a>
+    <a href="#!" id="lb-2" class="lightbox" aria-label="Закрыть">
+      <span class="lightbox-close" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <figure><img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-2.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Покраска элементов кузова — бампер и крыло"><figcaption>Покраска элементов · Бампер и крыло после ДТП</figcaption></figure>
+    </a>
+    <a href="#!" id="lb-3" class="lightbox" aria-label="Закрыть">
+      <span class="lightbox-close" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <figure><img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-3.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Сварка порогов и арок — ремонт"><figcaption>Сварка порогов и арок · Ремонт порога и арки</figcaption></figure>
+    </a>
+    <a href="#!" id="lb-4" class="lightbox" aria-label="Закрыть">
+      <span class="lightbox-close" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <figure><img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-4.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Полировка кузова — восстановление блеска"><figcaption>Полировка · Восстановление блеска лака</figcaption></figure>
+    </a>
+    <a href="#!" id="lb-5" class="lightbox" aria-label="Закрыть">
+      <span class="lightbox-close" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <figure><img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-5.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Подготовка кузова — шпаклёвка и грунт"><figcaption>Подготовка · Шпаклёвка и грунт перед покраской</figcaption></figure>
+    </a>
+    <a href="#!" id="lb-6" class="lightbox" aria-label="Закрыть">
+      <span class="lightbox-close" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <figure><img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-6.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Покраска двери и капота в цвет по коду"><figcaption>Покраска элементов · Дверь и капот в цвет по коду</figcaption></figure>
+    </a>
+    <a href="#!" id="lb-7" class="lightbox" aria-label="Закрыть">
+      <span class="lightbox-close" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <figure><img src="https://raw.githubusercontent.com/catflowerwindow/site-oleg/main/oleg-7.jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj4KPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMyMDIyMmIiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAwLDE1MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M2YTQ0ZCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNTUiPgo8cGF0aCBkPSJNLTcwLDIwIEMtNjAsLTEwIC0zMCwtMjggMCwtMjggQzMwLC0yOCA2MCwtMTAgNzAsMjAiLz4KPHBhdGggZD0iTS04MCwyNiBMODAsMjYiLz4KPGNpcmNsZSBjeD0iLTQwIiBjeT0iMzAiIHI9IjEyIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzAiIHI9IjEyIi8+CjwvZz4KPC9zdmc+';" alt="Машина после мойки и полировки"><figcaption>Результат · Машина после мойки и полировки</figcaption></figure>
+    </a>
+  </section>
+
+  <section id="why" class="process">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Почему я</p>
+        <h2>Обращаются напрямую к мастеру</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-item">
+          <h3><span class="ico"></span>Свой гараж</h3>
+          <p>Работаю в собственном боксе в Воронеже — полный контроль над каждым этапом, без цеховой очереди.</p>
+        </div>
+        <div class="why-item">
+          <h3><span class="ico"></span>Гибкость по материалам</h3>
+          <p>Можете привезти свои материалы или доверить их подбор мне. Использую проверенные краски, грунты и лаки с учётом особенностей автомобиля.</p>
+        </div>
+        <div class="why-item">
+          <h3><span class="ico"></span>Консультация бесплатно</h3>
+          <p>Оценю объём работ и назову цену до того, как вы примете решение. Без скрытых доплат в процессе.</p>
+        </div>
+        <div class="why-item">
+          <h3><span class="ico"></span>Личная ответственность</h3>
+          <p>Всю работу от начала до конца делаю сам — красит именно тот, с кем вы договаривались.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Контакты</p>
+        <h2>Записаться на консультацию</h2>
+        <p>Напишите или позвоните — отвечаю в течение дня.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="contact-row">
+            <span class="contact-label">Мастер</span>
+            <span class="contact-value">Олег</span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label">Телефон</span>
+            <span class="contact-value"><a href="tel:+79155830286">+7 (915) 583-02-86</a><small>звонок или SMS</small></span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label">Вконтакте</span>
+            <span class="contact-value"><a href="https://vk.ru/olezkagon" target="_blank" rel="noopener">@olezkagon</a><small>быстрее всего пишите сюда</small></span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label">Гараж</span>
+            <span class="contact-value">Воронеж<small>ул. Кривошеина, 7А</small></span>
+          </div>
+         
+
+
+
+          <a class="btn btn-avito btn-block" target="_blank" rel="noopener" href="https://www.avito.ru/user/31de53fd83a48eaaa4a64de86f17a046/profile?src=sharing&utm_medium=soc_sharing&utm_source=vk&utm_campaign=native&utm_content=vk&utm_term=native">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            Профиль и отзывы на Авито
+          </a>
+        </div>
+        <div class="cta-panel">
+          <h3>Сомневаетесь в объёме работы?</h3>
+          <p>Пришлите фото повреждения в Вконткте — скажу примерную стоимость и сроки ещё до осмотра, бесплатно.</p>
+          <a href="https://vk.ru/olezkagon" target="_blank" rel="noopener" class="btn btn-primary btn-block">Написать в Вконтакте</a>
+          <a href="tel:+79155830286" class="btn btn-ghost btn-block">+7 (915) 583-02-86</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span class="foot-logo">ОЛЕГ</span>
+    <span>Покраска автомобилей и элементов кузова · Воронеж, ул. Кривошеина, 7А</span>
+    <span>© 2026. Работаю напрямую, без посредников. <a href="https://www.avito.ru/" target="_blank" rel="noopener">Профиль на Авито</a></span>
+  </div>
+</footer>
+
+<div class="sticky-cta">
+  <a href="https://t.me/oleg_pokraska" target="_blank" rel="noopener" class="btn btn-primary">Написать</a>
+  <a href="tel:+79001234567" class="btn btn-ghost">Позвонить</a>
+</div>
+
+<script>
+  var header = document.getElementById('site-header');
+  window.addEventListener('scroll', function(){
+    header.classList.toggle('is-scrolled', window.scrollY > 10);
+  }, {passive:true});
+
+  document.documentElement.style.scrollBehavior = 'smooth';
+
+  var carPath = document.getElementById('car-path');
+  if (carPath && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    try {
+      var len = carPath.getTotalLength();
+      carPath.style.strokeDasharray = len;
+      carPath.style.strokeDashoffset = len;
+      carPath.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(.16,.84,.44,1)';
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          carPath.style.strokeDashoffset = '0';
+        });
+      });
+    } catch (e) {
+      /* hero-art is display:none below 760px, so getTotalLength() can throw
+         on some browsers — safely skip the animation instead of breaking
+         anything else on the page. */
+    }
+  }
+</script>
+
+</body>
+</html>
